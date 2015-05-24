@@ -23,22 +23,23 @@ public class Image {
 
     public Image(@NotNull Pixel[][] pixels) {
         checkNotNull(pixels, "Pixels cannot be null");
+        // TODO fix copy
         this.pixels = Arrays.copyOf(pixels, pixels.length);
     }
 
-    public int rowCount() {
+    public int height() {
         return pixels.length;
     }
 
-    public int columnCount() {
+    public int width() {
         return pixels.length > 0 ? pixels[0].length : 0;
     }
 
     public Pixel getPixel(int row, int column) {
-        checkArgument(row >= 0 && row < rowCount(),
-                "Row %s doesn't exist. Image row count: %s", row, rowCount());
-        checkArgument(column >= 0 && column < columnCount(),
-                "Column %s doesn't exist. Image columnCount: %s", column, columnCount());
+        checkArgument(row >= 0 && row < height(),
+                "Row %s doesn't exist. Image height: %s", row, height());
+        checkArgument(column >= 0 && column < width(),
+                "Column %s doesn't exist. Image width: %s", column, width());
         return pixels[row][column];
     }
 }

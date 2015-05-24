@@ -15,9 +15,19 @@ dependencies {
     compile 'net.jcip:jcip-annotations:1.0'
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'ch.qos.logback:logback-classic:1.1.3'
-
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.5.3'
 
     testCompile 'org.mockito:mockito-core:1.+'
     testCompile 'org.assertj:assertj-core:3.0.0'
     testCompile 'junit:junit:4.12'
+}
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'pl.dziurdziak.pobrLogoRecognition.LogoRecognizer'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
