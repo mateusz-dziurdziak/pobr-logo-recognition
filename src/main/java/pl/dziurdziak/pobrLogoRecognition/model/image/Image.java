@@ -3,6 +3,7 @@ package pl.dziurdziak.pobrLogoRecognition.model.image;
 import lombok.ToString;
 import net.jcip.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
+import pl.dziurdziak.pobrLogoRecognition.util.CommonUtils;
 
 import java.util.Arrays;
 
@@ -23,8 +24,7 @@ public class Image {
 
     public Image(@NotNull Pixel[][] pixels) {
         checkNotNull(pixels, "Pixels cannot be null");
-        // TODO fix copy
-        this.pixels = Arrays.copyOf(pixels, pixels.length);
+        this.pixels = CommonUtils.copy(pixels);
     }
 
     public int height() {
@@ -41,5 +41,9 @@ public class Image {
         checkArgument(column >= 0 && column < width(),
                 "Column %s doesn't exist. Image width: %s", column, width());
         return pixels[row][column];
+    }
+
+    public Pixel[][] getPixels() {
+        return CommonUtils.copy(pixels);
     }
 }

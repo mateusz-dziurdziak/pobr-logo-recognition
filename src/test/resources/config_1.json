@@ -21,10 +21,69 @@
     },
     {
       "type": "Mask",
-      "mask": [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+      "mask": [
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          4,
+          5,
+          6
+        ],
+        [
+          7,
+          8,
+          9
+        ]
+      ]
     }
   ],
-  "segmentationConfig": {
-    "minPixelsForSegment": 30
-  }
+  "segmentClassificationConfigs": [
+    {
+      "predicates": [
+        {
+          "type": "Pixels",
+          "min": 30,
+          "max": 2000
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_1",
+          "min": 0.3302915709,
+          "max": 0.3303597946
+        }
+      ],
+      "classifyAs": "out"
+    },
+    {
+      "predicates": [
+        {
+          "type": "Pixels",
+          "min": 30,
+          "max": 2000
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_1",
+          "min": 0.2912607142,
+          "max": 0.2912935986
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_7",
+          "min": 0.0212039085,
+          "max": 0.0212085673
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_3",
+          "min": 0.0005074945,
+          "max": 0.0005104459
+        }
+      ],
+      "classifyAs": "inner"
+    }
+  ]
 }

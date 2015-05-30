@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.ToString;
 import net.jcip.annotations.Immutable;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Image;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Pixel;
 
@@ -14,6 +16,8 @@ import pl.dziurdziak.pobrLogoRecognition.model.image.Pixel;
 @ToString
 @Immutable
 public class BinaryFilter implements Filter {
+
+    private static final Logger LOG = LoggerFactory.getLogger(BinaryFilter.class);
 
     private final int maxRed;
     private final int maxGreen;
@@ -30,6 +34,7 @@ public class BinaryFilter implements Filter {
     @NotNull
     @Override
     public Image filter(@NotNull Image image) {
+        LOG.info("Running binary filter. maxRed: {}, maxGreen: {}, maxBlue: {}", maxRed, maxGreen, maxBlue);
         Pixel[][] pixels = new Pixel[image.height()][image.width()];
 
         for (int row = 0; row < image.height(); row++) {
@@ -42,6 +47,7 @@ public class BinaryFilter implements Filter {
                 }
             }
         }
+        LOG.info("End binary filter");
         return new Image(pixels);
     }
 }

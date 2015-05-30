@@ -23,10 +23,9 @@ public enum Direction {
     @Getter
     private final IntFunction<Integer> columnFunction;
 
-    private Direction(IntFunction<Integer> rowFunction, IntFunction<Integer> columnFunction) {
+    Direction(IntFunction<Integer> rowFunction, IntFunction<Integer> columnFunction) {
         this.rowFunction = rowFunction;
         this.columnFunction = columnFunction;
     }
-
 
 }

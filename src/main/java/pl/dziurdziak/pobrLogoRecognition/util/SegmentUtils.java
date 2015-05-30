@@ -2,12 +2,18 @@ package pl.dziurdziak.pobrLogoRecognition.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.dziurdziak.pobrLogoRecognition.model.calculation.SegmentCalculations;
+import pl.dziurdziak.pobrLogoRecognition.model.classification.ClassifiedSegment;
+import pl.dziurdziak.pobrLogoRecognition.model.classification.Predicate;
+import pl.dziurdziak.pobrLogoRecognition.model.configuration.Configuration;
+import pl.dziurdziak.pobrLogoRecognition.model.configuration.SegmentClassificationConfig;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Image;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Pixel;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Direction;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Point;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Segment;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -55,8 +61,8 @@ public class SegmentUtils {
      * Initializes and returns segment which started point is located at provided location. Next points are searched
      * with bread-first algorithm
      *
-     * @param image image
-     * @param assigned array containing information if pixel is already assigned (ATTENTION: array IS modified by function)
+     * @param image      image
+     * @param assigned   array containing information if pixel is already assigned (ATTENTION: array IS modified by function)
      * @param startPoint start point
      * @return segment
      */
@@ -107,5 +113,23 @@ public class SegmentUtils {
 
     private static boolean isWhite(Image image, Point point) {
         return image.getPixel(point.getRow(), point.getColumn()).equals(Pixel.WHITE);
+    }
+
+    public static List<ClassifiedSegment> classify(List<SegmentCalculations> segments, Configuration configuration) {
+        List<ClassifiedSegment> classifiedSegments = newArrayList();
+        for (SegmentCalculations segment : segments) {
+            for (SegmentClassificationConfig config : configuration.getSegmentClassificationConfigs()) {
+                boolean fulfil = true;
+                Iterator<Predicate> predicateIterator = config.getPredicates().iterator();
+                while (predicateIterator.hasNext() && fulfil) {
+                    fulfil = predicateIterator.next().fulfil(segment);
+                }
+
+                if (fulfil) {
+                    classifiedSegments.add(new ClassifiedSegment(segment, config.getClassifyAs()));
+                }
+            }
+        }
+        return classifiedSegments;
     }
 }
