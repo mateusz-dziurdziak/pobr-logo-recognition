@@ -1,4 +1,4 @@
-package pl.dziurdziak.pobrLogoRecognition.filter;
+package pl.dziurdziak.pobrLogoRecognition.func.filter;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -10,6 +10,7 @@ import pl.dziurdziak.pobrLogoRecognition.model.image.Image;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = BinaryFilter.class, name = "Binary"),
+        @JsonSubTypes.Type(value = RangeBinaryFilter.class, name = "RangeBinary"),
         @JsonSubTypes.Type(value = MaskFilter.class, name = "Mask"),
         @JsonSubTypes.Type(value = MaxFilter.class, name = "Max"),
         @JsonSubTypes.Type(value = MinFilter.class, name = "Min"),

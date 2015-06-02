@@ -1,6 +1,7 @@
-package pl.dziurdziak.pobrLogoRecognition.model.recognition;
+package pl.dziurdziak.pobrLogoRecognition.func.recognition;
 
 import pl.dziurdziak.pobrLogoRecognition.model.classification.ClassifiedSegment;
+import pl.dziurdziak.pobrLogoRecognition.model.recognition.Logo;
 
 import java.util.List;
 

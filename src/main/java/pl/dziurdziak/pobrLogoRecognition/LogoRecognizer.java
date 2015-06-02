@@ -2,12 +2,12 @@ package pl.dziurdziak.pobrLogoRecognition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.dziurdziak.pobrLogoRecognition.filter.Filter;
+import pl.dziurdziak.pobrLogoRecognition.func.filter.Filter;
 import pl.dziurdziak.pobrLogoRecognition.model.classification.ClassifiedSegment;
 import pl.dziurdziak.pobrLogoRecognition.model.configuration.Configuration;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Image;
 import pl.dziurdziak.pobrLogoRecognition.model.recognition.Logo;
-import pl.dziurdziak.pobrLogoRecognition.model.recognition.Recognizer;
+import pl.dziurdziak.pobrLogoRecognition.func.recognition.Recognizer;
 import pl.dziurdziak.pobrLogoRecognition.util.FileUtils;
 import pl.dziurdziak.pobrLogoRecognition.util.ImageUtils;
 import pl.dziurdziak.pobrLogoRecognition.util.SegmentUtils;
@@ -35,7 +35,7 @@ public class LogoRecognizer {
             image = filter.filter(image);
             if (configuration.isExportFilesAfterEachStep()) {
                 FileUtils.writeImageToFile(image, configuration.getOutputDir() + "/" + configuration.getOutputFileName()
-                        + i + configuration.getOutFileType(), configuration.getOutFileType());
+                        + i + "." + configuration.getOutFileType(), configuration.getOutFileType());
             }
             i++;
         }
@@ -46,9 +46,9 @@ public class LogoRecognizer {
 
         List<Logo> logos = recognizer.recognize(classifiedSegments);
 
-        Image result = ImageUtils.drawRectanglesOnLogos(image, logos);
+        Image result = ImageUtils.drawRectanglesOnLogos(initialImage, logos);
 
-        FileUtils.writeImageToFile(result, configuration.getOutputDir() + "/" + configuration.getOutputFileName()
+        FileUtils.writeImageToFile(result, configuration.getOutputDir() + "/" + configuration.getOutputFileName() + "."
                 + configuration.getOutFileType(), configuration.getOutFileType());
     }
 

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import net.jcip.annotations.Immutable;
-import pl.dziurdziak.pobrLogoRecognition.filter.Filter;
+import pl.dziurdziak.pobrLogoRecognition.func.filter.Filter;
 
 import java.util.List;
 

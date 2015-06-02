@@ -1,4 +1,4 @@
-package pl.dziurdziak.pobrLogoRecognition.model.classification;
+package pl.dziurdziak.pobrLogoRecognition.func.classification;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

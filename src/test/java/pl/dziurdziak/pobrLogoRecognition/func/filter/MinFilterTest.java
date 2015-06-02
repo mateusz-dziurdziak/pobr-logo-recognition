@@ -1,4 +1,4 @@
-package pl.dziurdziak.pobrLogoRecognition.filter;
+package pl.dziurdziak.pobrLogoRecognition.func.filter;
 
 import org.junit.Test;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Image;

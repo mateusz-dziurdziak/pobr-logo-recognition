@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.dziurdziak.pobrLogoRecognition.model.calculation.SegmentCalculations;
 import pl.dziurdziak.pobrLogoRecognition.model.classification.ClassifiedSegment;
-import pl.dziurdziak.pobrLogoRecognition.model.classification.Predicate;
+import pl.dziurdziak.pobrLogoRecognition.func.classification.Predicate;
 import pl.dziurdziak.pobrLogoRecognition.model.configuration.Configuration;
 import pl.dziurdziak.pobrLogoRecognition.model.configuration.SegmentClassificationConfig;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Image;

@@ -1,15 +1,14 @@
-package pl.dziurdziak.pobrLogoRecognition.model.recognition;
+package pl.dziurdziak.pobrLogoRecognition.func.recognition;
 
 import com.google.common.collect.ImmutableList;
 import pl.dziurdziak.pobrLogoRecognition.model.classification.ClassifiedSegment;
+import pl.dziurdziak.pobrLogoRecognition.model.recognition.Logo;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Point;
 import pl.dziurdziak.pobrLogoRecognition.util.CommonUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 /**

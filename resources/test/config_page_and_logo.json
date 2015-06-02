@@ -1,0 +1,80 @@
+{
+  "outputDir": "build/out",
+  "outputFileName": "page_resized",
+  "outFileType": "png",
+  "exportFileAfterEachStep": true,
+  "filters": [
+    {
+      "type": "Rank",
+      "windowSize": 9,
+      "position": 5
+    },
+    {
+      "type": "Min",
+      "windowSize": 4
+    },
+    {
+      "type": "RangeBinary",
+      "minRed": 150,
+      "maxRed": 215,
+      "minGreen": 150,
+      "maxGreen": 210,
+      "minBlue": 5,
+      "maxBlue": 75
+    }
+  ],
+  "minPixelsInSegment": 100,
+  "segmentClassificationConfigs": [
+    {
+      "predicates": [
+        {
+          "type": "Pixels",
+          "min": 1000,
+          "max": 100000000
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_1",
+          "min": 0.280771396,
+          "max": 0.3998671828
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_7",
+          "min": 0.0231853592,
+          "max": 0.0373684272
+        }
+      ],
+      "classifyAs": "out"
+    },
+    {
+      "predicates": [
+        {
+          "type": "Pixels",
+          "min": 1000,
+          "max": 100000000
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_1",
+          "min": 0.2476129427,
+          "max": 0.335005746
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_7",
+          "min": 0.0170293235,
+          "max": 0.0243926142
+        },
+        {
+          "type": "MomentInvariant",
+          "momentInvariant": "M_8",
+          "min": -0.0000752467519961900 ,
+          "max": -0.00002090954253884880
+        }
+      ],
+      "classifyAs": "inner"
+    }
+  ],
+  "recognizerClass": "pl.dziurdziak.pobrLogoRecognition.func.recognition.RaiffeisenLogoRecognizer"
+}
