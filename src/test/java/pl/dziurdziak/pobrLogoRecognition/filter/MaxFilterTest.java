@@ -14,7 +14,7 @@ public class MaxFilterTest {
         Image image = FileUtils.readImageFromFile("src/test/resources/logo_resized.jpg");
         Filter filter = new MaxFilter(25);
         Image filteredImage = filter.filter(image);
-        FileUtils.writeImageToFile(filteredImage, "build/tmp/maxFilterTest.jpg");
+        FileUtils.writeImageToFile(filteredImage, "build/tmp/maxFilterTest.jpg", "jpg");
     }
 
 }

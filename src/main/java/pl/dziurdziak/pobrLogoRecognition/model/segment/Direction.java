@@ -9,13 +9,9 @@ import java.util.function.IntFunction;
  */
 public enum Direction {
     NORTH(row -> row - 1, col -> col),
-    NORTH_EAST(row -> row - 1, col -> col + 1),
     EAST(row -> row, col -> col + 1),
-    SOUTH_EAST(row -> row + 1, col -> col + 1),
     SOUTH(row -> row + 1, col -> col),
-    SOUTH_WEST(row -> row + 1, col -> col - 1),
-    WEST(row -> row, col -> col - 1),
-    NORTH_WEST(row -> row - 1, col -> col - 1);
+    WEST(row -> row, col -> col - 1);
 
     @Getter
     private final IntFunction<Integer> rowFunction;

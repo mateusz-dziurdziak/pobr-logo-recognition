@@ -9,6 +9,7 @@ import pl.dziurdziak.pobrLogoRecognition.model.calculation.SegmentCalculations;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({@JsonSubTypes.Type(value = MomentInvariantPredicate.class, name = "MomentInvariant"),
+        @JsonSubTypes.Type(value = CoefficientPredicate.class, name = "Coefficient"),
         @JsonSubTypes.Type(value = NumberOfPixelsPredicate.class, name = "Pixels")})
 public interface Predicate {
 

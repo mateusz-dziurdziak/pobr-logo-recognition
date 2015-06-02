@@ -52,7 +52,7 @@ public class FileUtils {
         }
     }
 
-    public static void writeImageToFile(Image image, String filePath) {
+    public static void writeImageToFile(Image image, String filePath, String fileType) {
         checkNotNull(image, "image cannot be null");
         checkArgument(isNotBlank(filePath), "filePath is blank");
 
@@ -63,7 +63,7 @@ public class FileUtils {
 
         BufferedImage bufferedImage = ImageUtils.convertImage(image);
         try {
-            ImageIO.write(bufferedImage, "jpg", file);
+            ImageIO.write(bufferedImage, fileType, file);
             LOG.info("Writing to file successful");
         } catch (IOException e) {
             LOG.error("Error while writing image to file. {}", e, filePath);

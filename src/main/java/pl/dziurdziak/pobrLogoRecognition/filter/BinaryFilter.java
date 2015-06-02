@@ -11,6 +11,9 @@ import pl.dziurdziak.pobrLogoRecognition.model.image.Image;
 import pl.dziurdziak.pobrLogoRecognition.model.image.Pixel;
 
 /**
+ * Converts image to black and white picture. If pixel red > {@link #maxRed} and pixel green > {@link #maxGreen}
+ * and pixel blue > {@link #maxBlue} pixel is considered to be {@link Pixel#WHITE}
+ *
  * @author Mateusz Dziurdziak
  */
 @ToString

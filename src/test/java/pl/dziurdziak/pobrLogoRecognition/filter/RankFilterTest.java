@@ -14,7 +14,7 @@ public class RankFilterTest {
         Image image = FileUtils.readImageFromFile("src/test/resources/logo_resized.jpg");
         Filter filter = new RankFilter(25, 12);
         Image filteredImage = filter.filter(image);
-        FileUtils.writeImageToFile(filteredImage, "build/tmp/medianFilterTEst.jpg");
+        FileUtils.writeImageToFile(filteredImage, "build/tmp/medianFilterTest.jpg", "jpg");
     }
 
 }

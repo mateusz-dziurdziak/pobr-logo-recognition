@@ -28,7 +28,7 @@ public class FileUtilsTest {
     @Test
     public void testReadAndWrite() {
         Image image = FileUtils.readImageFromFile("src/test/resources/logo_resized.jpg");
-        FileUtils.writeImageToFile(image, "build/tmp/outTest.jpg");
+        FileUtils.writeImageToFile(image, "build/tmp/outTest.jpg", "jpg");
         assertThat(new File("build/tmp/outTest.jpg")).exists();
     }
 

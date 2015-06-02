@@ -25,6 +25,7 @@ public class Configuration {
     private final String outFileType;
     private final boolean exportFilesAfterEachStep;
     private final List<Filter> filters;
+    private final int minPixelsInSegment;
     private final List<SegmentClassificationConfig> segmentClassificationConfigs;
     private final String recognizerClass;
 
@@ -34,12 +35,14 @@ public class Configuration {
                          @JsonProperty("outFileType") String outFileType,
                          @JsonProperty("exportFileAfterEachStep") boolean exportFileAfterEachStep,
                          @JsonProperty("filters") List<Filter> filters,
+                         @JsonProperty("minPixelsInSegment") int minPixelsInSegment,
                          @JsonProperty("segmentClassificationConfigs") List<SegmentClassificationConfig> segmentClassificationConfigs,
                          @JsonProperty("recognizerClass") String recognizerClass) {
         this.outputDir = outputDir;
         this.outputFileName = outputFileName;
         this.outFileType = outFileType;
         this.exportFilesAfterEachStep = exportFileAfterEachStep;
+        this.minPixelsInSegment = minPixelsInSegment;
         this.filters = ImmutableList.copyOf(filters);
         this.segmentClassificationConfigs = ImmutableList.copyOf(segmentClassificationConfigs);
         this.recognizerClass = recognizerClass;

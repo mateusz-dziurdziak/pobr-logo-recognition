@@ -1,5 +1,7 @@
 package pl.dziurdziak.pobrLogoRecognition.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.dziurdziak.pobrLogoRecognition.model.calculation.SegmentCalculations;
@@ -31,13 +33,40 @@ public class SegmentUtils {
     private SegmentUtils() {
     }
 
+    @NotNull
+    public static List<ClassifiedSegment> getClassifiedSegments(Configuration configuration, Image image) {
+        LOG.info("Getting classified segments");
+        long startTime = currentTimeMillis();
+
+        // holds information if pixel is already assigned to some segment
+        boolean[][] assigned = new boolean[image.height()][image.width()];
+
+        List<ClassifiedSegment> classifiedSegments = newArrayList();
+        for (int row = 0; row < image.height(); row++) {
+            for (int col = 0; col < image.width(); col++) {
+                if (!assigned[row][col]) {
+                    // if pixel is not assigned to segment we initialize new segment with current point as start point
+                    Segment segment = getSegment(image, assigned, new Point(row, col));
+                    if (segment.getSize() < configuration.getMinPixelsInSegment()) {
+                        continue;
+                    }
+                    SegmentCalculations segmentCalculations = new SegmentCalculations(segment);
+                    classifiedSegments.addAll(classify(segmentCalculations, configuration));
+                }
+            }
+        }
+
+        LOG.info("Found {} classified segments. Took {} ms", classifiedSegments.size(), currentTimeMillis() - startTime);
+        return classifiedSegments;
+    }
+
     /**
      * Gets list of segments from image. One segment is created from connected, same colour pixels.
      *
      * @param image image to be analized
      * @return list of segments
      */
-    public static List<Segment> getSegments(Image image) {
+    public static List<Segment> getSegments(Image image, @Nullable Pixel colour) {
         LOG.info("Getting segments...");
         long startTime = currentTimeMillis();
 
@@ -47,13 +76,14 @@ public class SegmentUtils {
         List<Segment> segments = newArrayList();
         for (int row = 0; row < image.height(); row++) {
             for (int col = 0; col < image.width(); col++) {
-                if (!assigned[row][col]) {
+                if (!assigned[row][col]
+                        && (colour == null || colour.equals(image.getPixel(row, col)))) {
                     // if pixel is not assigned to segment we initialize new segment with current point as start point
                     segments.add(getSegment(image, assigned, new Point(row, col)));
                 }
             }
         }
-        LOG.info("Got segments. Took {} ms", currentTimeMillis() - startTime);
+        LOG.info("Found {} segments. Took {} ms", segments.size(), currentTimeMillis() - startTime);
         return segments;
     }
 
@@ -70,14 +100,14 @@ public class SegmentUtils {
         // holds information if pixel was already selected as candidate
         boolean[][] unavailable = new boolean[image.height()][image.width()];
         Segment segment = new Segment(image.height(), image.width());
-        boolean isWhite = isWhite(image, startPoint);
+        Pixel colour = image.getPixel(startPoint.getRow(), startPoint.getColumn());
 
         Queue<Point> candidates = new LinkedList<>();
         addCandidate(candidates, unavailable, startPoint.getRow(), startPoint.getColumn());
         while (!candidates.isEmpty()) {
             Point candidate = candidates.poll();
             if (!assigned[candidate.getRow()][candidate.getColumn()]
-                    && isWhite == isWhite(image, candidate)) {
+                    && colour.equals(image.getPixel(candidate.getRow(), candidate.getColumn()))) {
                 addPointToSegment(assigned, unavailable, segment, candidate);
                 addNextCandidates(image, assigned, unavailable, candidates, candidate);
             }
@@ -111,23 +141,17 @@ public class SegmentUtils {
         unavailable[row][column] = true;
     }
 
-    private static boolean isWhite(Image image, Point point) {
-        return image.getPixel(point.getRow(), point.getColumn()).equals(Pixel.WHITE);
-    }
-
-    public static List<ClassifiedSegment> classify(List<SegmentCalculations> segments, Configuration configuration) {
+    private static List<ClassifiedSegment> classify(SegmentCalculations segment, Configuration configuration) {
         List<ClassifiedSegment> classifiedSegments = newArrayList();
-        for (SegmentCalculations segment : segments) {
-            for (SegmentClassificationConfig config : configuration.getSegmentClassificationConfigs()) {
-                boolean fulfil = true;
-                Iterator<Predicate> predicateIterator = config.getPredicates().iterator();
-                while (predicateIterator.hasNext() && fulfil) {
-                    fulfil = predicateIterator.next().fulfil(segment);
-                }
+        for (SegmentClassificationConfig config : configuration.getSegmentClassificationConfigs()) {
+            boolean fulfil = true;
+            Iterator<Predicate> predicateIterator = config.getPredicates().iterator();
+            while (predicateIterator.hasNext() && fulfil) {
+                fulfil = predicateIterator.next().fulfil(segment);
+            }
 
-                if (fulfil) {
-                    classifiedSegments.add(new ClassifiedSegment(segment, config.getClassifyAs()));
-                }
+            if (fulfil) {
+                classifiedSegments.add(new ClassifiedSegment(segment, config.getClassifyAs()));
             }
         }
         return classifiedSegments;

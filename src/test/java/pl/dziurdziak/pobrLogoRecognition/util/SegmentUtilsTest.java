@@ -23,10 +23,12 @@ public class SegmentUtilsTest {
                 {BLACK, WHITE, BLACK},
                 {BLACK, BLACK, WHITE}};
         Image image = new Image(pixels);
-        List<Segment> segments = SegmentUtils.getSegments(image);
-        assertThat(segments).hasSize(2);
-        assertThat(segments.get(0).getSize()).isEqualTo(6);
-        assertThat(segments.get(1).getSize()).isEqualTo(3);
+        List<Segment> segments = SegmentUtils.getSegments(image, null);
+        assertThat(segments).hasSize(4);
+        assertThat(segments.get(0).getSize()).isEqualTo(4);
+        assertThat(segments.get(1).getSize()).isEqualTo(2);
+        assertThat(segments.get(2).getSize()).isEqualTo(2);
+        assertThat(segments.get(3).getSize()).isEqualTo(1);
     }
 
 }

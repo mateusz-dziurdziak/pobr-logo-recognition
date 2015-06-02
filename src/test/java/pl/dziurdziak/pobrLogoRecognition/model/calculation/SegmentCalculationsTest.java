@@ -23,7 +23,7 @@ public class SegmentCalculationsTest {
                 {BLACK, WHITE, BLACK},
                 {BLACK, BLACK, WHITE}};
         Image image = new Image(pixels);
-        List<Segment> segments = SegmentUtils.getSegments(image);
+        List<Segment> segments = SegmentUtils.getSegments(image, null);
         segments.forEach(segment -> new SegmentCalculations(segment));
     }
 

@@ -4,15 +4,19 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import lombok.Getter;
 import net.jcip.annotations.Immutable;
+import pl.dziurdziak.pobrLogoRecognition.model.segment.Direction;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Point;
 import pl.dziurdziak.pobrLogoRecognition.model.segment.Segment;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.lang.Math.PI;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_00;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_01;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_02;
@@ -23,6 +27,12 @@ import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_20;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_21;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.CentralMoment.M_30;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_1;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_2;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_3;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_7;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_8;
+import static pl.dziurdziak.pobrLogoRecognition.model.calculation.Coefficient.W_9;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.MomentInvariant.M_1;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.MomentInvariant.M_2;
 import static pl.dziurdziak.pobrLogoRecognition.model.calculation.MomentInvariant.M_3;
@@ -43,15 +53,27 @@ public class SegmentCalculations {
     private final Segment segment;
     private final Table<Integer, Integer, Double> normalMoments;
     @Getter
-    private double centerI, centerJ;
+    private double centerI, centerJ; // effectively final
     private final Map<CentralMoment, Double> centralMoments;
     private final Map<MomentInvariant, Double> momentInvariants;
     @Getter
-    private int minRow, maxRow, minCol, maxCol;
+    private int minRow, maxRow, minCol, maxCol; // effectively final
     @Getter
-    private int geomCenterRow, geomCenterCol;
+    private int width, height; // effectively final
+    @Getter
+    private int geomCenterRow, geomCenterCol;  // effectively final
+    @Getter
+    private final int area;
+    @Getter
+    private int perimeter; // effectively final
+    @Getter
+    private int lMax; // effectively final
+    @Getter
+    private double rMin, rMax; // effectively final
+    private final Map<Coefficient, Double> coefficients;
 
     public SegmentCalculations(Segment segment) {
+        checkArgument(segment.getSize() > 0, "Segment cannot be empty");
         this.segment = segment;
         normalMoments = HashBasedTable.create();
         calculateWeightCenter();
@@ -60,7 +82,12 @@ public class SegmentCalculations {
         momentInvariants = new LinkedHashMap<>(MomentInvariant.values().length);
         calculateMomentInvariants();
         findExtremePoints();
+        calculateWidthAndHeight();
         calculateGeometricCenter();
+        area = segment.getSize();
+        calculateContourParams(segment);
+        coefficients = new LinkedHashMap<>(Coefficient.values().length);
+        calculateCoefficients();
     }
 
     /**
@@ -108,7 +135,7 @@ public class SegmentCalculations {
         centralMoments.put(M_03, m(0, 3) - 3 * m(0, 2) * centerJ + 2 * m(0, 1) * pow(centerJ, 2));
     }
 
-    private double get(CentralMoment centralMoment) {
+    public double get(CentralMoment centralMoment) {
         return centralMoments.get(centralMoment);
     }
 
@@ -146,9 +173,52 @@ public class SegmentCalculations {
         }
     }
 
+    private void calculateWidthAndHeight() {
+        width = maxCol - minCol + 1;
+        height = maxRow - minRow + 1;
+    }
+
     private void calculateGeometricCenter() {
         geomCenterRow = (minRow + maxRow) / 2;
         geomCenterCol = (minCol + maxCol) / 2;
+    }
+
+    private void calculateContourParams(Segment segment) {
+        rMin = Integer.MAX_VALUE;
+        rMax = Integer.MIN_VALUE;
+        for (int row = minRow; row <= maxRow; row++) {
+            for (int col = minCol; col <= maxCol; col++) {
+                if (segment.isMember(row, col)) {
+                    for (Direction direction : Direction.values()) {
+                        int neighbourRow = direction.getRowFunction().apply(row);
+                        int neighbourCol = direction.getColumnFunction().apply(col);
+                        boolean isNeighbourInSegment = neighbourRow >= minRow && neighbourRow <= maxRow
+                                && neighbourCol >= minCol && neighbourCol <= maxCol
+                                && segment.isMember(neighbourRow, neighbourCol);
+                        if (!isNeighbourInSegment) {
+                            perimeter++;
+                            double distance = sqrt(pow(centerI - row, 2) + pow(centerJ - col, 2));
+                            rMin = min(rMin, distance);
+                            rMax = max(rMax, distance);
+                        }
+                    }
+                }
+            }
+        }
+        lMax = max(maxRow - minRow, maxCol - minCol);
+    }
+
+    private void calculateCoefficients() {
+        coefficients.put(W_1, 2 * sqrt(area / PI));
+        coefficients.put(W_2, perimeter / PI);
+        coefficients.put(W_3, perimeter / (2 * sqrt(PI * area)) - 1);
+        coefficients.put(W_7, rMin / rMax);
+        coefficients.put(W_8, (double) lMax / perimeter);
+        coefficients.put(W_9, 2 * sqrt(PI / area) / perimeter);
+    }
+
+    public double get(Coefficient coefficient) {
+        return coefficients.get(coefficient);
     }
 
 }
