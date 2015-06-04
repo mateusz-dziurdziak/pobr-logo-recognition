@@ -1,6 +1,6 @@
 {
   "outputDir": "build/out",
-  "outputFileName": "page_resized",
+  "outputFileName": "out",
   "outFileType": "png",
   "exportFileAfterEachStep": true,
   "filters": [
@@ -16,10 +16,10 @@
     {
       "type": "RangeBinary",
       "minRed": 150,
-      "maxRed": 215,
+      "maxRed": 255,
       "minGreen": 150,
-      "maxGreen": 210,
-      "minBlue": 5,
+      "maxGreen": 240,
+      "minBlue": 0,
       "maxBlue": 75
     }
   ],
