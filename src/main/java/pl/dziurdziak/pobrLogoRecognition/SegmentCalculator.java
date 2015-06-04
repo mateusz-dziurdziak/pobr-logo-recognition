@@ -48,7 +48,7 @@ public class SegmentCalculator {
     }
 
     private static void exportMoments(Map<String, SegmentCalculations> segmentCalculationsMap) throws IOException {
-        File outputFile = new File("calculations.txt");
+        File outputFile = new File("calculations.csv");
         if (outputFile.exists()) {
             checkState(outputFile.delete(), "File calculations.txt cannot be deleted");
         }
@@ -76,7 +76,7 @@ public class SegmentCalculator {
     }
 
     private static void writeHeader(Writer writer) throws IOException {
-        writer.write("Segment,");
+        writer.write("File,");
         for (Coefficient coefficient : Coefficient.values()) {
             writer.write(coefficient.name() + ",");
         }
