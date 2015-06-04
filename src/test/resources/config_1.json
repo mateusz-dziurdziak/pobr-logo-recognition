@@ -44,11 +44,6 @@
     {
       "predicates": [
         {
-          "type": "Pixels",
-          "min": 30,
-          "max": 2000
-        },
-        {
           "type": "MomentInvariant",
           "momentInvariant": "M_1",
           "min": 0.3302915709,
@@ -59,11 +54,6 @@
     },
     {
       "predicates": [
-        {
-          "type": "Pixels",
-          "min": 30,
-          "max": 2000
-        },
         {
           "type": "MomentInvariant",
           "momentInvariant": "M_1",
