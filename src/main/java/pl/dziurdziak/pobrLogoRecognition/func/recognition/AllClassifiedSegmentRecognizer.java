@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * @author Mateusz Dziurdziak
  */
-public class AllClasifiedSegmentRecognizer implements Recognizer {
+public class AllClassifiedSegmentRecognizer implements Recognizer {
 
     @Override
     public List<Logo> recognize(List<ClassifiedSegment> classifiedSegments) {
